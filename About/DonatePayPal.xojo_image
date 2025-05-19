@@ -1,0 +1,40 @@
+#tag MultiImage
+Image DonatePayPal
+	#tag ImageRepresentation
+		SaveInfo = APHRcwECAQAAAAAvRDpcQ29kZVxYT0pPXEtDRyBJbWFnZSBWaWV3ZXJcRG9uYXRlX1BheVBhbC5wbmcDAAAAAAEABAAAAAABAAAAAAAAAA==
+		FullPath = D:\Code\XOJO\KCG Image Viewer\Donate_PayPal.png
+		PartialPath = ..\KCG Image Viewer\Donate_PayPal.png
+		#tag ImageSpecification
+			Comment = 
+			Device = 31
+			HSize = 296.00
+			Orientation = Any
+			Platform = 15
+			PPI = 72
+			VSize = 170.00
+		#tag EndImageSpecification
+	#tag EndImageRepresentation
+	#tag ImageRepresentation
+		#tag ImageSpecification
+			Comment = 
+			Device = 31
+			HSize = -1.00
+			Orientation = Any
+			Platform = 15
+			PPI = 144
+			VSize = -1.00
+		#tag EndImageSpecification
+	#tag EndImageRepresentation
+	#tag ImageRepresentation
+		#tag ImageSpecification
+			Comment = 
+			Device = 31
+			HSize = -1.00
+			Orientation = Any
+			Platform = 15
+			PPI = 216
+			VSize = -1.00
+		#tag EndImageSpecification
+	#tag EndImageRepresentation
+End Image
+#tag EndMultiImage
