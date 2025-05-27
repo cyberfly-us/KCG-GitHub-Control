@@ -8,8 +8,9 @@ This is set to run as Administrator because that is how I started out doing it f
 
 I wrote it and tested it on Windows. But I wrote it to run on MacOS and Linux as well. So, it should run on those platforms as well. I put both the text version and the binary version out here. I prefer binary projects and GitHub works best with the text version.   
   
-![](media/166a385220b9e8667addbac349cb1897.png)
+![](media/09f0203a0a95bcfe0b0eb22f12f7330b.png)
 
 -   Version 1.1.0.0 is the initial release of the program.
+-   Version 1.2.0.0 is to add the optional sponsor information for GitHub.
 
 My website is: <HTTP://KCG-Software.com>

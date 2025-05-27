@@ -11,7 +11,7 @@ Begin DesktopWindow winGitHub
    HasMaximizeButton=   False
    HasMinimizeButton=   True
    HasTitleBar     =   True
-   Height          =   291
+   Height          =   325
    ImplicitInstance=   True
    MacProcID       =   0
    MaximumHeight   =   32000
@@ -155,7 +155,7 @@ Begin DesktopWindow winGitHub
       TabPanelIndex   =   0
       TextColor       =   &c00000000
       Tooltip         =   ""
-      Top             =   199
+      Top             =   233
       Transparent     =   False
       Underline       =   False
       Value           =   False
@@ -278,7 +278,7 @@ Begin DesktopWindow winGitHub
       TabPanelIndex   =   0
       TextColor       =   &c00000000
       Tooltip         =   ""
-      Top             =   199
+      Top             =   233
       Transparent     =   False
       Underline       =   False
       Value           =   False
@@ -570,7 +570,7 @@ Begin DesktopWindow winGitHub
       TabPanelIndex   =   0
       TextColor       =   &c00000000
       Tooltip         =   ""
-      Top             =   199
+      Top             =   233
       Transparent     =   False
       Underline       =   False
       Value           =   False
@@ -607,7 +607,7 @@ Begin DesktopWindow winGitHub
       TextAlignment   =   2
       TextColor       =   &cFF000000
       Tooltip         =   ""
-      Top             =   241
+      Top             =   275
       Transparent     =   False
       Underline       =   False
       Visible         =   False
@@ -639,11 +639,82 @@ Begin DesktopWindow winGitHub
       TextAlignment   =   0
       TextColor       =   &c0000FF00
       Tooltip         =   ""
-      Top             =   241
+      Top             =   275
       Transparent     =   False
       Underline       =   True
       Visible         =   True
       Width           =   121
+   End
+   Begin DesktopCheckBox ckbAddSponsor
+      AllowAutoDeactivate=   True
+      Bold            =   True
+      Caption         =   "Add Sponsor"
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   12.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Scope           =   2
+      TabIndex        =   17
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   199
+      Transparent     =   False
+      Underline       =   False
+      Value           =   False
+      Visible         =   True
+      VisualState     =   0
+      Width           =   100
+   End
+   Begin DesktopTextField TextFieldSponsor
+      AllowAutoDeactivate=   True
+      AllowFocusRing  =   True
+      AllowSpellChecking=   False
+      AllowTabs       =   False
+      BackgroundColor =   &cFFFFFF
+      Bold            =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   12.0
+      FontUnit        =   0
+      Format          =   ""
+      HasBorder       =   True
+      Height          =   22
+      Hint            =   ""
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   139
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      MaximumCharactersAllowed=   0
+      Password        =   False
+      ReadOnly        =   False
+      Scope           =   2
+      TabIndex        =   18
+      TabPanelIndex   =   0
+      TabStop         =   False
+      Text            =   "https://www.paypal.com/donate/?hosted_button_id=PFJXBER5AYB3L"
+      TextAlignment   =   0
+      TextColor       =   &c000000
+      Tooltip         =   ""
+      Top             =   199
+      Transparent     =   False
+      Underline       =   False
+      ValidationMask  =   ""
+      Visible         =   True
+      Width           =   441
    End
 End
 #tag EndDesktopWindow
@@ -696,7 +767,33 @@ End
 		    Return
 		  End If
 		  
-		  // 2) (Optional) ensure README.md exists so there's at least one file to commit
+		  // 2) (Optional) build the FUNDING.yml
+		  If ckbAddSponsor.Value Then
+		    // Define the .GitHub folder path inside repoPath
+		    Var repoFolder As FolderItem = New FolderItem(repoPath, FolderItem.PathModes.Native)
+		    Var gitHubFolder As FolderItem = repoFolder.Child(".GitHub")
+		    
+		    // Create the .GitHub folder if it doesn’t exist
+		    If Not gitHubFolder.Exists Then
+		      gitHubFolder.CreateFolder
+		    End If
+		    
+		    // Define the FUNDING.yml file path inside .GitHub
+		    Var fundingFile As FolderItem = gitHubFolder.Child("FUNDING.yml")
+		    
+		    // Create FUNDING.yml if it doesn't exist
+		    If Not fundingFile.Exists Then
+		      Try
+		        Var outputStream As TextOutputStream = TextOutputStream.Create(fundingFile)
+		        outputStream.Write("custom: [""" + TextFieldSponsor.Text + """]")
+		        outputStream.Close
+		      Catch e As IOException
+		        MessageBox("Error creating FUNDING.yml file: " + e.Message)
+		      End Try
+		    End If
+		  End If
+		  
+		  // 3) (Optional) ensure README.md exists so there's at least one file to commit
 		  //    but we’ll add “.” below so everything gets pushed.
 		  Dim folder As New FolderItem(repoPath, FolderItem.PathModes.Native)
 		  Dim readmeFile As FolderItem = folder.Child("README.md")
@@ -711,10 +808,10 @@ End
 		    End Try
 		  End If
 		  
-		  // 3) Build the remote URL
+		  // 4) Build the remote URL
 		  Dim remoteURL As String = "https://github.com/" + userName + "/" + repoName + ".git"
 		  
-		  // 4) Chain all commands in one interactive shell call
+		  // 5) Chain all commands in one interactive shell call
 		  Dim sh As New Shell
 		  sh.ExecuteMode = Shell.ExecuteModes.Interactive
 		  
@@ -741,12 +838,12 @@ End
 		    sh.Execute(cmd)
 		  #EndIf
 		  
-		  // 5) Wait for completion (and credential prompts)…
+		  // 6) Wait for completion (and credential prompts)…
 		  While sh.IsRunning
 		    App.DoEvents
 		  Wend
 		  
-		  // 6) Show Git’s feedback
+		  // 7) Show Git’s feedback
 		  MessageBox("Git says:" + EndOfLine + sh.ReadAll)
 		End Sub
 	#tag EndMethod
@@ -779,6 +876,41 @@ End
 		  If commitMessage.IsEmpty Then
 		    MessageBox("Please enter a commit message.")
 		    Return
+		  End If
+		  
+		  // (Optional) build the FUNDING.yml
+		  If ckbAddSponsor.Value Then
+		    // Define the .GitHub folder path inside repoPath
+		    Var repoFolder As FolderItem = New FolderItem(repoPath, FolderItem.PathModes.Native)
+		    Var gitHubFolder As FolderItem = repoFolder.Child(".GitHub")
+		    
+		    // Create the .GitHub folder if it doesn’t exist
+		    If Not gitHubFolder.Exists Then
+		      gitHubFolder.CreateFolder
+		    End If
+		    
+		    // Define the FUNDING.yml file path inside .GitHub
+		    Var fundingFile As FolderItem = gitHubFolder.Child("FUNDING.yml")
+		    
+		    // Create FUNDING.yml if it doesn't exist
+		    If Not fundingFile.Exists Then
+		      Try
+		        Var outputStream As TextOutputStream = TextOutputStream.Create(fundingFile)
+		        outputStream.Write("custom: [""" + TextFieldSponsor.Text + """]")
+		        outputStream.Close
+		      Catch e As IOException
+		        MessageBox("Error creating FUNDING.yml file: " + e.Message)
+		      End Try
+		    Else
+		      fundingFile.Remove
+		      Try
+		        Var outputStream As TextOutputStream = TextOutputStream.Create(fundingFile)
+		        outputStream.Write("custom: [""" + TextFieldSponsor.Text + """]")
+		        outputStream.Close
+		      Catch e As IOException
+		        MessageBox("Error creating FUNDING.yml file: " + e.Message)
+		      End Try
+		    End If
 		  End If
 		  
 		  #If TargetWindows
