@@ -989,47 +989,15 @@ End
 #tag Events btnDocumentation
 	#tag Event
 		Sub Pressed()
-		  Var f As FolderItem
-		  f = App.ExecutableFile.Parent.Child("Documentation.pdf")
+		  Var f As FolderItem = App.ExecutableFile.Parent.Child("Documentation.pdf")
 		  
-		  #If TargetWindows Then
-		    If f.Exists Then
-		      // Use Windows API directly
-		      #If TargetWindows Then
-		        Declare Function ShellExecute Lib "shell32" Alias "ShellExecuteW" ( _
-		        hwnd As Integer, _
-		        lpOperation As WString, _
-		        lpFile As WString, _
-		        lpParameters As WString, _
-		        lpDirectory As WString, _
-		        nShowCmd As Integer ) As Integer
-		        
-		        Const SW_SHOWNORMAL = 1
-		        
-		        // Open the PDF with default application
-		        Call ShellExecute(0, "open", f.NativePath, "", "", SW_SHOWNORMAL)
-		      #EndIf
-		    Else
-		      MessageBox("Error: File not found.")
-		    End If
-		  #EndIf
-		  
-		  #If TargetMacOS Then
-		    Var filePath As String = f.NativePath
-		    filePath = """" + filePath.ReplaceAll("""", "\""") + """"
-		    
-		    // Use in shell command
-		    Var sh As New Shell
-		    sh.Execute("open -a Preview " + filePath)
-		  #EndIf
-		  
-		  #If TargetLinux Then
-		    Var filePath As String = f.NativePath
-		    filePath = """" + filePath.ReplaceAll("""", "\""") + """"
-		    
-		    Var sh As New Shell
-		    sh.Execute("xdg-open " + filePath)
-		  #EndIf
+		  If f <> Nil And f.Exists Then
+		    // This automatically handles Windows, macOS, and Linux 
+		    // by opening the PDF in the user's default PDF viewer.
+		    f.Open
+		  Else
+		    MessageBox("The documentation file could not be found.")
+		  End If
 		  
 		End Sub
 	#tag EndEvent
