@@ -1,6 +1,13 @@
 #tag Class
 Protected Class App
 Inherits DesktopApplication
+	#tag Event
+		Sub Opening()
+		  // Put your Monkeybread Softwre license here.
+		End Sub
+	#tag EndEvent
+
+
 	#tag Constant, Name = CopywriteDate, Type = String, Dynamic = False, Default = \"May 2025", Scope = Public
 	#tag EndConstant
 
@@ -23,6 +30,14 @@ Inherits DesktopApplication
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="ProcessID"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=false
